@@ -147,6 +147,7 @@ void main(int argc, char **argv)
       printf(" %02x", send_msg.Data[i]);
    }
    printf("\n");
+   printf("\nYtterligare changes");
    retval = CAN_Send ( can_port, 0, &send_msg );
    if (retval) printf("\nerror sending message through port %d: %d", can_port, retval);
 

@@ -404,11 +404,11 @@
   }
 }
 { SubSystem = Tree
-    { Node = 1 ; can_send.pdl [.ide]
-      { NodeFlag = BuildDepends | FatFile | OutOfDate }
+    { Node = 1 ; can_send.pdl [.pdl]
+      { NodeFlag = BuildDepends | FatFile }
       { StyleSheet = "Default Project Options" }
         { Node = 2 ; can_send.exe [.exe]
-          { NodeFlag = BuildDepends | FatFile | OutOfDate | UserGen }
+          { NodeFlag = BuildDepends | FatFile | UserGen }
           { Builder = "LinkTarget" }
           { Overrides = "ASFN:can_send.exe0"
             { CppCompile = "-ml -f- -Y -D__ADDR24__;SC123;$INHERIT;" }
