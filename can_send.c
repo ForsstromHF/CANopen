@@ -92,7 +92,8 @@ void main(int argc, char **argv)
    	printf("\n\t<port> = port number (0/1)");
    	printf("\n\t<nodeID> = node ID (0..7ff)");
    	printf("\n\t<RTR> = RTR (0/1)");
-   	printf("\n\t<data> = data");
+	printf("\n\t<data> = data");
+	printf("\nHojhoj");
       return;
    }
 

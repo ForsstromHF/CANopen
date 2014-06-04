@@ -33,6 +33,65 @@
   }
 }
 { SubSystem = Tool
+  { Tool = "SourceInclude"
+    { Category = Translator }
+    { Path = "[Internal]" }
+    { HelpHint = "Include source file in target build" }
+    { SearchPath = SourcePath }
+    { ToolFlag = MakeTool | ReadOnly }
+    { AppliesTo = ".def;.rtf;" }
+    { DefaultFor = ".def;.rtf;" }
+    { DependencyChecker = NopDepend }
+  }
+  { Tool = "LinkLibrary"
+    { Category = Translator }
+    { Path = "[Internal]" }
+    { MenuText = "&Link and Implib" }
+    { HelpHint = "Link .dll then create import library" }
+    { SearchPath = OutputPath }
+    { ToolFlag = LocalMenu | TargetTranslator | ReadOnly }
+    { AppliesTo = ".dll;" }
+    { DefaultFor = ".dll;" }
+    { TranslateTo = ".lib" }
+    { DependencyChecker = CollectorDepend }
+  }
+  { Tool = "RunExecutable"
+    { Category = Viewer }
+    { CmdLine = "$ARGS" }
+    { MenuText = "&Run" }
+    { HelpHint = "Run executable using IDE Debugger" }
+    { SearchPath = OutputPath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".exe;.dll;" }
+  }
+  { Tool = "TraceInto"
+    { Category = Viewer }
+    { CmdLine = "$ARGS" }
+    { MenuText = "&Debug" }
+    { HelpHint = "Trace into first instruction of executable" }
+    { SearchPath = OutputPath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".exe;.dll;" }
+    { DefaultFor = ".dll;" }
+  }
+  { Tool = "DebugSymbolsOnly"
+    { Category = Viewer }
+    { CmdLine = "$ARGS" }
+    { MenuText = "Debug with &symbols only" }
+    { HelpHint = "Create a debug session using only the symbol table of the target node" }
+    { SearchPath = OutputPath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".exe;.dll;" }
+  }
+  { Tool = "ViewEmuFile"
+    { Category = Viewer }
+    { CmdLine = "$ARGS" }
+    { MenuText = "&Current .emu file" }
+    { HelpHint = "Edit the .emu file that the debugger will load prior to creating a debug session" }
+    { SearchPath = OutputPath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".exe;.dll;" }
+  }
   { Tool = "EditText"
     { Category = Viewer }
     { CmdLine = "$EDNAME" }
@@ -62,14 +121,30 @@
     { AppliesTo = ".ide;.pdl;" }
     { DefaultFor = ".ide;.pdl;" }
   }
-  { Tool = "SourceInclude"
-    { Category = Translator }
-    { HelpHint = "Include source file in target build" }
-    { SearchPath = SourcePath }
-    { ToolFlag = MakeTool | ReadOnly }
-    { AppliesTo = ".def;.rtf;" }
-    { DefaultFor = ".def;.rtf;" }
-    { DependencyChecker = NopDepend }
+  { Tool = "CHIPTool"
+    { Category = Viewer }
+    { MenuText = "&CHIPTool utility" }
+    { HelpHint = "IPC@CHIPTool target management utility" }
+    { SearchPath = 0 }
+    { ToolFlag = ToolsMenu | ReadOnly }
+  }
+  { Tool = "Disassemble"
+    { Category = Viewer }
+    { CmdLine = "$NOSWAP $CAP MSG(PARA2MSG) $SELNODES" }
+    { MenuText = "&Disassemble" }
+    { HelpHint = "Disassemble object file" }
+    { SearchPath = 0 }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".cpp;.c;.cas;.asm;.obj;" }
+  }
+  { Tool = "DumpToFile"
+    { Category = Viewer }
+    { CmdLine = "$NOSWAP $CAP MSG(PARA2MSG) $SELNODES" }
+    { MenuText = "Dump to &File" }
+    { HelpHint = "Dump file contents using Paradigm C++ PDUMP" }
+    { SearchPath = 0 }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".cpp;.c;.cas;.asm;.obj;.lib;.rom;.axe;" }
   }
   { Tool = "HeaderInclude"
     { Category = Translator }
@@ -186,17 +261,6 @@
     { DefaultFor = ".rom;.exe;" }
     { DependencyChecker = CollectorDepend }
   }
-  { Tool = "LinkLibrary"
-    { Category = Translator }
-    { MenuText = "&Link and Implib" }
-    { HelpHint = "Link .dll then create import library" }
-    { SearchPath = OutputPath }
-    { ToolFlag = LocalMenu | TargetTranslator | ReadOnly }
-    { AppliesTo = ".dll;" }
-    { DefaultFor = ".dll;" }
-    { TranslateTo = ".lib" }
-    { DependencyChecker = CollectorDepend }
-  }
   { Tool = "LibraryCreate"
     { Category = Translator }
     { MenuText = "&Create Library" }
@@ -249,12 +313,29 @@
     { TranslateTo = ".ash" }
     { DependencyChecker = TimeStamp }
   }
+  { Tool = "Lint"
+    { Category = Translator }
+    { MenuText = "&Lint" }
+    { HelpHint = "Run lint on current node" }
+    { SearchPath = SourcePath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { AppliesTo = ".cpp;.c;.cas;" }
+    { DependencyChecker = NopDepend }
+  }
+  { Tool = "PrjLint"
+    { Category = Translator }
+    { MenuText = "&Lint" }
+    { HelpHint = "Run lint on current target" }
+    { SearchPath = SourcePath }
+    { ToolFlag = LocalMenu | ReadOnly }
+    { DependencyChecker = NopDepend }
+  }
 }
 { SubSystem = NodeGraph
   { Dependencies = Auto }
   { BreakOn = Errors }
   { Node = "can_send.pdl"
-    { NodeType = ".ide" }
+    { NodeType = ".pdl" }
     { Id = 1 }
   }
   { Node = "can_send.exe"
@@ -274,6 +355,28 @@
       { Data = '53 43 31 32 33 00'
       }
     }
+    { Property = "PdkEmulator"
+      { Data = '4e 6f 20 64 65 62 75 67 67 69 6e 67 5c 72 65 61 6c
+           00'
+      }
+    }
+    { Property = "ProjectArguments"
+      { Data = '00'
+      }
+    }
+    { Property = "ProjectSourcePath"
+      { Data = '00'
+      }
+    }
+    { Property = "ProjectWhichMain"
+      { Data = '6d 61 69 6e 00'
+      }
+    }
+    { Property = "ProjectFlags"
+      { Data = '70 72 6f 6a 65 63 74 5f 66 6c 61 67 73 3d 32 65 20
+           31 30 33 30 30 00'
+      }
+    }
   }
   { Node = "c0lx.obj"
     { NodeType = ".obj" }
@@ -291,24 +394,32 @@
     { NodeType = ".lib" }
     { Id = 6 }
   }
-  { Node = "..\source\can_send.c"
+  { Node = "clib.h"
+    { NodeType = ".h" }
+    { Id = 8 }
+  }
+  { Node = "can_send.c"
     { NodeType = ".c" }
-    { Id = 7 }
+    { Id = 9 }
   }
 }
 { SubSystem = Tree
     { Node = 1 ; can_send.pdl [.ide]
-      { NodeFlag = BuildDepends }
+      { NodeFlag = BuildDepends | FatFile | OutOfDate }
       { StyleSheet = "Default Project Options" }
         { Node = 2 ; can_send.exe [.exe]
-          { NodeFlag = BuildDepends | FatFile | UserGen }
+          { NodeFlag = BuildDepends | FatFile | OutOfDate | UserGen }
           { Builder = "LinkTarget" }
           { Overrides = "ASFN:can_send.exe0"
             { CppCompile = "-ml -f- -Y -D__ADDR24__;SC123;$INHERIT;" }
             { Link = "-Tee" }
             { Assemble = "-d__ADDR24__;SC123;$INHERIT;" }
           }
-            { Node = 7 ; ..\source\can_send.c [.c]
+            { Node = 8 ; clib.h [.h]
+              { NodeFlag = BuildDepends | FatFile | UserGen }
+              { Builder = "HeaderInclude" }
+            }
+            { Node = 9 ; can_send.c [.c]
               { NodeFlag = BuildDepends | FatFile | UserGen }
               { Builder = "CCompile" }
             }
